@@ -1,7 +1,16 @@
 import React, { useState } from 'react';
-import './style.css';
+import { createGlobalStyle } from 'styled-components';
 import MainLayout from './layout/MainLayout';
 import { createToggleScroll } from './customHooks';
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+`;
 
 function App() {
 
@@ -15,16 +24,19 @@ function App() {
   } = createToggleScroll(setToggleContact, toggleContact, setToggleExps, toggleExps);
 
   return (
-    <div {...bindGesture()}>
-      <ToggleProvider value={valuesLangCtxt}>
-        <MainLayout
-            toggleContact={toggleContact}
-            setToggleContact={setToggleContact}
-            toggleExps={toggleExps}
-            setToggleExps={setToggleExps}
-        />
-      </ToggleProvider>
-    </div>
+    <>
+      <GlobalStyle />
+      <div {...bindGesture()}>
+        <ToggleProvider value={valuesLangCtxt}>
+          <MainLayout
+              toggleContact={toggleContact}
+              setToggleContact={setToggleContact}
+              toggleExps={toggleExps}
+              setToggleExps={setToggleExps}
+          />
+        </ToggleProvider>
+      </div>
+    </>
   );
 }
 
