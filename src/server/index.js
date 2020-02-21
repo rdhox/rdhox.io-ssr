@@ -1,0 +1,54 @@
+import App from '../client/App';
+import React from 'react';
+import express from 'express';
+import { renderToString } from 'react-dom/server';
+import { ServerStyleSheet } from 'styled-components';
+
+const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
+
+const server = express();
+server
+  .disable('x-powered-by')
+  .use(express.static(process.env.RAZZLE_PUBLIC_DIR))
+  .get('/*', (req, res) => {
+    const sheet = new ServerStyleSheet();
+    const context = {};
+    const markup = renderToString(sheet.collectStyles(<App />));
+    const styleTags = sheet.getStyleTags();
+
+    if (context.url) {
+      res.redirect(context.url);
+    } else {
+      res.status(200).send(
+        `<!doctype html>
+    <html lang="">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta charset="utf-8" />
+        <title>rdhox.io</title>
+        <meta name="keywords" content="developer,javascript,node,react,freelance">
+        <meta name="description" content="Welcome to my personnal website! You'll find here some informations about my work. Don't hesitate to contact me or follow me on twitter.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="author" content="rdhox - Freelancer">
+        ${
+          assets.client.css
+            ? `<link rel="stylesheet" href="${assets.client.css}">`
+            : ''
+        }
+        ${
+          process.env.NODE_ENV === 'production'
+            ? `<script src="${assets.client.js}" defer></script>`
+            : `<script src="${assets.client.js}" defer crossorigin></script>`
+        }
+        <!-- Render the style tags gathered from the components into the DOM -->
+        ${styleTags}
+    </head>
+    <body>
+        <div id="root">${markup}</div>
+    </body>
+</html>`
+      );
+    }
+  });
+
+export default server;

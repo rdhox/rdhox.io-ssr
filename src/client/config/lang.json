@@ -1,0 +1,14 @@
+{
+  "fr": {
+    "blaz": "RDHOX",
+    "name": "Renaud Déchaux",
+    "job": "Développeur UI web & mobile",
+    "subJob": "Indépendant, 100% React, Formateur."
+  },
+  "en": {
+    "blaz": "RDHOX",
+    "name": "Renaud Déchaux",
+    "job": "Front-end dev web & mobile",
+    "subJob": "Freelancer, 100% React, Teacher."
+  }
+}
