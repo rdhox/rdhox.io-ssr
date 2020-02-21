@@ -61,7 +61,7 @@ const Container = styled.div`
   align-items: center;
   padding: 5px;
 
-  @media (max-width: 1224px) {
+  @media (max-width: 750px) {
     top: -15px;
     right: -25px;
     width: 200px;

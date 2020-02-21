@@ -75,7 +75,7 @@ const Container = styled.div`
   animation-fill-mode: forwards;
   transform-origin: bottom right;
 
-  @media (max-width: 1224px) {
+  @media (max-width: 750px) {
     left: 100px;
     animation-name: ${animMobile};
   }

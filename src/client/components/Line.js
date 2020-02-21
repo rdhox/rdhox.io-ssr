@@ -12,7 +12,7 @@ const Container = styled.div`
   transform: ${({angle}) => `rotateZ(${angle}deg)`};
   transform-origin: bottom right;
 
-  @media (max-width: 1224px) {
+  @media (max-width: 750px) {
     width: 80px;
     height: 3px
   }

@@ -38,16 +38,17 @@ const animation = keyframes`
   }
   60% {
     opacity: 1;
-    left: 0%;
+    left: -5%;
   }
   100% {
     opacity: 1;
-    left: 10%;
+    left: 0%;
   }
 `;
 
 const Container = styled.div`
   position: relative;
+  width: 480px;
   opacity: 0;
   margin-bottom: 30px;
   animation-name: ${animation};
@@ -56,6 +57,10 @@ const Container = styled.div`
   animation-timing-function: ease-out;
   animation-fill-mode: forwards;
   perspective: 350px;
+
+  @media (max-width: 750px) {
+    width: 230px;
+  }
 `;
 
 const Wrapper = styled.div`

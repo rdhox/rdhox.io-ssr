@@ -32,7 +32,7 @@ const Container = styled.span`
   font-style: ${({italic}) => italic ? 'italic' : 'normal'};
   letter-spacing: ${({spacing}) => spacing+'px'};
 
-  @media (max-width: 1224px) {
+  @media (max-width: 750px) {
     font-size: 26px;
   }
 
