@@ -42,6 +42,7 @@ const Exps = ({toggle}) => {
               name={icons[index].name}
               title={icons[index].title}
               url={icons[index].url}
+              background={false}
             />
         </animated.div>
       ))}

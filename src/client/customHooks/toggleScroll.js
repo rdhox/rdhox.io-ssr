@@ -76,7 +76,7 @@ export function useCreateToggleScroll(
       handleToggle(250, distance, 0.5);
     }
     if (axis === 'x') {
-      handleMenu(200, distance, direction[0]);
+      handleMenu(140, distance, direction[0]);
     }
   }
 

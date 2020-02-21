@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Picto from './Picto';
 
-const Icon = ({name, url, title}) => {
+const Icon = ({name, url, title, background}) => {
 
   return (
-    <Container>
+    <Container background={background}>
       {(url !== '') ? (
         <a href={url} title={title}>
           <Picto icon={name} />
@@ -24,13 +24,13 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #EEEEEE;
+  background-color: ${({background}) => background ? '#EEEEEE': 'transparent'};
   border-radius: 10px;
   cursor: pointer;
   margin: 0px;
 
   &:hover {
-    background-color: #EDE7F6;
+    background-color: ${({background}) => background ? '#EDE7F6': 'transparent'};
   }
 
   img {
@@ -48,11 +48,13 @@ Icon.propTypes = {
   name: PropTypes.string.isRequired,
   title: PropTypes.string,
   url: PropTypes.string,
+  background: PropTypes.bool,
 };
 
 Icon.defaultProps = {
   title: '',
   url: '',
+  background: true
 };
  
 export default Icon;
