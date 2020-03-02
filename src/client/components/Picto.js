@@ -8,7 +8,7 @@ import maltPicto from '../assets/svg/malt.svg';
 import githubPicto from '../assets/svg/github.svg';
 import twitterPicto from '../assets/svg/twitter.svg';
 import blablafootPicto from '../assets/blablafoot.png';
-import cedhPicto from '../assets/cedh.png';
+import nuliPicto from '../assets/nuli.png';
 import dialPicto from '../assets/dial.png';
 import icecreamPicto from '../assets/icecream.png';
 import nelioPicto from '../assets/nelio.png';
@@ -22,7 +22,7 @@ const svgs = {
   githubIcon: githubPicto,
   twitterIcon: twitterPicto,
   blablafootIcon: blablafootPicto,
-  cedhIcon: cedhPicto,
+  nuliIcon: nuliPicto,
   dialIcon: dialPicto,
   icecreamIcon: icecreamPicto,
   nelioIcon: nelioPicto,
