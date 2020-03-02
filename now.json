@@ -15,11 +15,11 @@
     },
     {
       "src": "/favicon.ico",
-      "dest": "favicon.ico"
+      "dest": "build/public/favicon.ico"
     },
     {
       "src": "/robots.txt",
-      "dest": "robots.txt"
+      "dest": "build/public/robots.txt"
     },
     {
       "src": "/(.*)",
