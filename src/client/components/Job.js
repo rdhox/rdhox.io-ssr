@@ -55,6 +55,7 @@ const Container = styled.div`
   animation-delay: ${timing.delayJob};
   animation-fill-mode: forwards;
   perspective: 350px;
+  cursor: pointer;
 `;
 
 const Wrapper = styled.div`

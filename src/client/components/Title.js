@@ -57,6 +57,7 @@ const Container = styled.div`
   animation-timing-function: ease-out;
   animation-fill-mode: forwards;
   perspective: 350px;
+  cursor: pointer;
 
   @media (max-width: 750px) {
     width: 230px;
