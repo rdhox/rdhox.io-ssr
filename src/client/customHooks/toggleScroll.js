@@ -52,17 +52,17 @@ export function useCreateToggleScroll(
           handleToggle(18, delta[1], 5);
           break;
         case 'chrome':
-          handleToggle(700, delta[1], 0.1);
+          handleToggle(18, delta[1], 5);
           break;
         case 'safari':
-          handleToggle(700, delta[1], 0.1);
+          handleToggle(18, delta[1], 5);
           break;
         case 'ios':
           handleToggle(18, delta[1], 5);
           break;
         default:
           console.error('No browser detected, some strange behaviors may happen');
-          handleToggle(700, delta[1], 0.1);
+          handleToggle(18, delta[1], 5);
       }
     }
   }

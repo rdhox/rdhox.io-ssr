@@ -18,7 +18,7 @@ const Title = ({handleToggleContact}) => {
   const [ toggleAnim, lang ] = useToggleScroll(); 
   const styleSub = { alignSelf: 'flex-start'};
   return (
-    <Container onMouseEnter={handleToggle} onClick={handleToggle}>
+    <Container onClick={handleToggle}>
       <animated.div style={toggleAnim}>
         <Wrapper>
           <TextTitle lang={lang} bold spacing={1}>blaz</TextTitle>

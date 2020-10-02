@@ -17,7 +17,7 @@ const Job  = ({handleToggleExps}) => {
   const styleSub = { alignSelf: 'flex-end'};
 
   return (
-    <Container onMouseEnter={handleToggle} onClick={handleToggle}>
+    <Container onClick={handleToggle}>
       <animated.div style={toggleAnim}>
       <Wrapper>
           <TextJob lang={lang} bold spacing={1}>job</TextJob>
