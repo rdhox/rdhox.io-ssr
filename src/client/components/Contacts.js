@@ -31,7 +31,7 @@ const Contacts = ({toggle}) => {
     if(!toggle && display){
       setTimeout(() => {
         setDisplay(false);
-      }, 1000);
+      }, 500);
     }
   },[toggle]);
 
@@ -53,8 +53,8 @@ const Contacts = ({toggle}) => {
 const Container = styled.div`
   position: relative;
   top: 0;
-  right: -70px;
-  width: 350px;
+  right: -110px;
+  width: 230px;
   height: 100px;
   display: flex;
   justify-content: space-between;
