@@ -15,6 +15,11 @@ import nelioPicto from '../assets/nelio.png';
 import noodPicto from '../assets/nood.png';
 import passrelPicto from '../assets/passrel.png';
 import tecknowmetrixPicto from '../assets/tecknowmetrix.png';
+import soundsuitPicto from '../assets/soundsuit.png';
+import clineappPicto from '../assets/clineapp.png';
+import sherfiPicto from '../assets/sherfi.png';
+import campusPicto from '../assets/campus.png';
+import simplonPicto from '../assets/simplon.png';
 
 const svgs = {
   mailIcon: mailPicto,
@@ -29,6 +34,11 @@ const svgs = {
   noodIcon: noodPicto,
   passrelIcon:  passrelPicto,
   tecknowmetrixIcon:  tecknowmetrixPicto,
+  soundsuitIcon:  soundsuitPicto,
+  clineappIcon:  clineappPicto,
+  sherfiIcon:  sherfiPicto,
+  campusIcon:  campusPicto,
+  simplonIcon:  simplonPicto,
 };
 
 const Picto = props => {

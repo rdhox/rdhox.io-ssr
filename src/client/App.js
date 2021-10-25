@@ -29,10 +29,10 @@ function App() {
       <div {...bindGesture()}>
         <ToggleProvider value={valuesLangCtxt}>
           <MainLayout
-              toggleContact={toggleContact}
-              setToggleContact={setToggleContact}
-              toggleExps={toggleExps}
-              setToggleExps={setToggleExps}
+            toggleContact={toggleContact}
+            setToggleContact={setToggleContact}
+            toggleExps={toggleExps}
+            setToggleExps={setToggleExps}
           />
         </ToggleProvider>
       </div>

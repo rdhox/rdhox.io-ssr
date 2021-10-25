@@ -1,5 +1,30 @@
 export default [
   {
+    name: 'soundsuitIcon',
+    url: 'https://soundsuit.fm',
+    title: 'Soundsuit'
+  },
+  {
+    name: 'simplonIcon',
+    url: 'https://simplon.co/',
+    title: 'Simplon'
+  },
+  {
+    name: 'campusIcon',
+    url: 'https://le-campus-numerique.fr',
+    title: 'Campus Numérique'
+  },
+  {
+    name: 'sherfiIcon',
+    url: 'https://www.sherfi.fr',
+    title: 'Atelier Sherfi'
+  },
+  {
+    name: 'clineappIcon',
+    url: 'https://apps.apple.com/fr/app/clineapp/id1523817439',
+    title: 'ClineApp'
+  },
+  {
     name: 'nuliIcon',
     url: 'https://apps.apple.com/fr/app/n%C3%BCli/id1492681304',
     title: 'Nüli'
@@ -16,7 +41,7 @@ export default [
   },
   {
     name:'tecknowmetrixIcon',
-    url: '',
+    url: 'https://tkminnovation.io',
     title: 'TeckNowMetrix'
   },
   {

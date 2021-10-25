@@ -32,7 +32,7 @@ const Exps = ({toggle}) => {
         setDisplay(false);
       }, 1000);
     }
-  },[toggle]);
+  },[display, toggle]);
 
   return (
     <Container>
@@ -57,9 +57,9 @@ const Container = styled.div`
   width: 600px;
   height: 100px;
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   padding: 5px;
 
