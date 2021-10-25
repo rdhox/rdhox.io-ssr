@@ -4,7 +4,13 @@ import MainLayout from './layout/MainLayout';
 import { createToggleScroll } from './customHooks';
 
 const GlobalStyle = createGlobalStyle`
+  html {
+    position: fixed;
+  }
   body {
+    position: fixed;
+    width: 100%;
+    overscroll-behavior-y: none;
     overflow: hidden;
     padding: 0;
     margin: 0;

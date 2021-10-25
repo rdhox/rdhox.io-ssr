@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import styled, {keyframes} from 'styled-components';
 import { detect } from 'detect-browser';
 
@@ -15,12 +15,19 @@ const browser = detect();
 const SwitchLang = props => {
 
   const { lang } = useContext(LangCtxt);
+  const [ device, setDevice ] = useState("mobile");
+
+  useEffect(() => {
+    if(browser.os) {
+      const deviceName = ["iOS", "Android OS"].includes(browser.os) ? "mobile": "desktop"
+      setDevice(deviceName);
+    }
+  }, []);
 
   return (
     <Container>
-      
       <ImgFlag isBig={lang === 'fr'} src={frenchFlag} alt="french_flag" />
-      {["iOS", "Android OS"].includes(browser.os) ? (
+      {device === 'mobile' ? (
         <Img src={swipe} alt="swipe" />
       ):(
         <Img src={wheel} alt="wheel" />
@@ -41,8 +48,8 @@ const animOpacity = keyframes`
 
 const Container = styled.div`
   position: absolute;
-  top: 50px;
-  right: 50px;
+  top: 20px;
+  right: 30px;
   display: flex;
   justify-content: center;
   align-items: center;

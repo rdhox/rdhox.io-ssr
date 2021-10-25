@@ -31,10 +31,11 @@ const Main = ({
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   height: 100vh;
   overflow: hidden;
+  padding-top: 70px;
 `;
 
 Main.propTypes = {
