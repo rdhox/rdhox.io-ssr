@@ -7,6 +7,7 @@ import Job from './Job';
 import Exps from './Exps';
 import AnimLine1 from './AnimLine1';
 import AnimLine2 from './AnimLine2';
+import SwitchLang from './SwitchLang';
 
 const Main = ({
   toggleContact,
@@ -16,6 +17,7 @@ const Main = ({
 }) => {
   return (
     <Container>
+      <SwitchLang />
       <Contacts toggle={toggleContact} />
       <AnimLine1 toggle={toggleContact} />
       <Title handleToggleContact={setToggleContact} />

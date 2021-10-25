@@ -11,4 +11,6 @@ export default {
   durationLine1: '0.4s',
   delayLine2: '1.1s',
   durationLine2: '0.4s',
+  langDelay:'1.5s',
+  langDuration: '0.5s'
 };

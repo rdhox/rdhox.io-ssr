@@ -4,8 +4,7 @@ import { useGesture } from 'react-use-gesture';
 import { detect } from 'detect-browser';
 
 const browser = detect();
-
-const LangCtxt = React.createContext();
+export const LangCtxt = React.createContext();
 
 export function useCreateToggleScroll(
   setToggleContact,
