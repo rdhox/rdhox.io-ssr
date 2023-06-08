@@ -1,1 +1,1 @@
-### My personnal website, build with Razzle and React.
+### My personnal website, build with Razzle and React
