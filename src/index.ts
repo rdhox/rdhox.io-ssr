@@ -16,8 +16,9 @@ const shouldListen =
   (typeof require !== 'undefined' && require.main === module);
 
 if (shouldListen) {
-  server.listen(port, () => {
-    console.log('🚀 started');
+  // Bind 0.0.0.0 so Docker/Coolify can reach the process (not only localhost).
+  server.listen(port, '0.0.0.0', () => {
+    console.log(`🚀 started on port ${port}`);
   });
 }
 

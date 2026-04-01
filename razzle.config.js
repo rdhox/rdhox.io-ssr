@@ -6,6 +6,11 @@
  * Bump terser ecma so optional chaining in deps minifies correctly.
  */
 module.exports = {
+  options: {
+    // Without this, Razzle's DefinePlugin bakes PORT from the *build* machine (often 3000).
+    // Coolify injects a different PORT at runtime — the proxy then gets "no available server".
+    forceRuntimeEnvVars: ['PORT'],
+  },
   modifyWebpackOptions({
     options: { webpackOptions },
     env: { target, dev },
