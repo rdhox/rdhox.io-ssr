@@ -48,7 +48,7 @@ const Contacts = ({ toggle }: ContactsProps) => {
   }, [toggle, display]);
 
   return (
-    <div className="relative -right-[110px] top-0 flex h-[100px] w-[230px] items-center justify-between overflow-x-hidden p-[5px] max-[750px]:-right-10 max-[750px]:top-[-15px] max-[750px]:h-[50px] max-[750px]:w-[150px]">
+    <div className="relative -right-[110px] top-0 flex h-[100px] w-[230px] items-center justify-between overflow-hidden p-[5px] max-[750px]:-right-10 max-[750px]:top-[-15px] max-[750px]:h-[50px] max-[750px]:w-[150px]">
       {display &&
         contactsSprings.map((styles, index) => (
           <animated.div

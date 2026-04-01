@@ -5,10 +5,13 @@
 @layer base {
   html {
     @apply fixed;
+    /* Évite le flash gris au tap (iOS / Chrome mobile) sur les zones cliquables. */
+    -webkit-tap-highlight-color: transparent;
   }
   body {
     @apply fixed w-full overflow-hidden p-0 m-0;
     overscroll-behavior-y: none;
+    -webkit-tap-highlight-color: transparent;
     font-family:
       -apple-system,
       system-ui,

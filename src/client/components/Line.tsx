@@ -18,7 +18,9 @@ const Line = ({
     style={{
       backgroundColor: color,
       borderRadius: `${radius}px`,
-      transform: `rotateZ(${angle}deg)`,
+      /* Calque GPU + arrière masqué : réduit le liseré gris (antialiasing) au bord des rotations composées. */
+      backfaceVisibility: 'hidden',
+      transform: `rotateZ(${angle}deg) translateZ(0)`,
     }}
   />
 );
