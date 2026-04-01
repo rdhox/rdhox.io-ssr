@@ -1,0 +1,16 @@
+# If Coolify builds with Nixpacks (no Dockerfile), force the prod server — not `npm start` / razzle dev.
+# Prefer deploying with the Dockerfile above when possible.
+
+[phases.setup]
+nixPkgs = ["nodejs_20"]
+
+[phases.install]
+dependsOn = ["setup"]
+cmds = ["npm ci"]
+
+[phases.build]
+dependsOn = ["install"]
+cmds = ["npm run build"]
+
+[start]
+cmd = "npm run start:prod"
