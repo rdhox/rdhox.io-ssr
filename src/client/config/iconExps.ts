@@ -8,6 +8,11 @@ export interface IconExp {
 
 const iconExps: IconExp[] = [
   {
+    name: 'homoFaberIcon',
+    url: 'https://apps.apple.com/fr/app/homo-faber/id1495770364',
+    title: 'Homo Faber',
+  },
+  {
     name: 'soundsuitIcon',
     url: 'https://soundsuit.fm',
     title: 'Soundsuit',
@@ -29,8 +34,8 @@ const iconExps: IconExp[] = [
   },
   {
     name: 'clineappIcon',
-    url: 'https://apps.apple.com/fr/app/clineapp/id1523817439',
-    title: 'ClineApp',
+    url: 'https://apps.apple.com/fr/app/emeis-clinic/id1523817439',
+    title: 'emeis CLINIC',
   },
   {
     name: 'nuliIcon',

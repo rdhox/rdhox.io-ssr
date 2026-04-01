@@ -1,3 +1,4 @@
+import './styles.css';
 import App from './App';
 import { createRoot, hydrateRoot } from 'react-dom/client';
 

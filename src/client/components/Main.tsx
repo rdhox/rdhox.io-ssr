@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
 import Contacts from './Contacts';
 import Title from './Title';
 import Job from './Job';
@@ -22,7 +21,7 @@ const Main = ({
   setToggleExps,
 }: MainProps) => {
   return (
-    <Container>
+    <div className="flex h-screen flex-col items-center justify-start overflow-hidden pt-[70px]">
       <SwitchLang />
       <Contacts toggle={toggleContact} />
       <AnimLine1 toggle={toggleContact} />
@@ -30,18 +29,8 @@ const Main = ({
       <Job handleToggleExps={setToggleExps} />
       <AnimLine2 toggle={toggleExps} />
       <Exps toggle={toggleExps} />
-    </Container>
+    </div>
   );
 };
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  height: 100vh;
-  overflow: hidden;
-  padding-top: 70px;
-`;
 
 export default Main;

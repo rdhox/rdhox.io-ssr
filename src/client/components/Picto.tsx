@@ -1,6 +1,5 @@
 /* eslint-disable no-param-reassign */
 import React from 'react';
-import styled from 'styled-components';
 
 import mailPicto from '../assets/svg/at.svg';
 import maltPicto from '../assets/svg/malt.svg';
@@ -8,6 +7,7 @@ import githubPicto from '../assets/svg/github.svg';
 import twitterPicto from '../assets/svg/twitter.svg';
 import blablafootPicto from '../assets/blablafoot.png';
 import nuliPicto from '../assets/nuli.png';
+import homoFaberPicto from '../assets/homoFaber.png';
 import dialPicto from '../assets/dial.png';
 import icecreamPicto from '../assets/icecream.png';
 import nelioPicto from '../assets/nelio.png';
@@ -27,6 +27,7 @@ const svgs = {
   twitterIcon: twitterPicto,
   blablafootIcon: blablafootPicto,
   nuliIcon: nuliPicto,
+  homoFaberIcon: homoFaberPicto,
   dialIcon: dialPicto,
   icecreamIcon: icecreamPicto,
   nelioIcon: nelioPicto,
@@ -46,18 +47,15 @@ interface PictoProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   icon: PictoName;
 }
 
-const Picto = ({ icon, ...rest }: PictoProps) => {
-  return <Img src={svgs[icon]} alt={icon} {...rest} />;
+const Picto = ({ icon, className = '', ...rest }: PictoProps) => {
+  return (
+    <img
+      className={`h-[54px] w-[54px] rounded-[5px] max-[750px]:h-[35px] max-[750px]:w-[35px] ${className}`}
+      src={svgs[icon]}
+      alt={icon}
+      {...rest}
+    />
+  );
 };
-
-const Img = styled.img`
-  width: 54px;
-  height: 54px;
-
-  @media (max-width: 750px) {
-    width: 35px;
-    height: 35px;
-  }
-`;
 
 export default Picto;

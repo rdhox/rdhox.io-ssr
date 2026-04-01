@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
 
 interface LineProps {
   length?: number;
@@ -10,31 +9,18 @@ interface LineProps {
 }
 
 const Line = ({
-  length: _length = 100,
-  thickness: _thickness = 3,
   color = 'black',
   radius = 2,
   angle = 0,
 }: LineProps) => (
-  <Container color={color} radius={radius} angle={angle} />
+  <div
+    className="h-[5px] w-[130px] origin-bottom-right rounded-[2px] max-[750px]:h-[3px] max-[750px]:w-20"
+    style={{
+      backgroundColor: color,
+      borderRadius: `${radius}px`,
+      transform: `rotateZ(${angle}deg)`,
+    }}
+  />
 );
-
-const Container = styled.div<{
-  color: string;
-  radius: number;
-  angle: number;
-}>`
-  width: 130px;
-  height: 5px;
-  background-color: ${({ color }) => color};
-  border-radius: ${({ radius }) => `${radius}px`};
-  transform: ${({ angle: a }) => `rotateZ(${a}deg)`};
-  transform-origin: bottom right;
-
-  @media (max-width: 750px) {
-    width: 80px;
-    height: 3px;
-  }
-`;
 
 export default Line;

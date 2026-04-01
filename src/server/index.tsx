@@ -2,7 +2,6 @@ import App from '../client/App';
 import React from 'react';
 import express from 'express';
 import { renderToString } from 'react-dom/server';
-import { ServerStyleSheet } from 'styled-components';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST as string);
@@ -12,12 +11,8 @@ server
   .disable('x-powered-by')
   .use(express.static(process.env.RAZZLE_PUBLIC_DIR as string))
   .get('/*', (req, res) => {
-    const sheet = new ServerStyleSheet();
     const context: { url?: string } = {};
-    const markup = renderToString(
-      sheet.collectStyles(<App />)
-    );
-    const styleTags = sheet.getStyleTags();
+    const markup = renderToString(<App />);
 
     if (context.url) {
       res.redirect(context.url);
@@ -43,8 +38,6 @@ server
             ? `<script src="${assets.client.js}" defer></script>`
             : `<script src="${assets.client.js}" defer crossorigin></script>`
         }
-        <!-- Render the style tags gathered from the components into the DOM -->
-        ${styleTags}
     </head>
     <body>
       <script type="text/javascript">

@@ -25,6 +25,14 @@ module.exports = {
     env: { target, dev },
     webpackConfig,
   }) {
+    if (target === 'web') {
+      // Webpack 5: no Node core polyfills for the browser; razzle-dev-utils HMR still needs `url`.
+      webpackConfig.resolve = webpackConfig.resolve || {};
+      webpackConfig.resolve.fallback = {
+        ...webpackConfig.resolve.fallback,
+        url: require.resolve('url/'),
+      };
+    }
     if (target === 'web' && !dev) {
       webpackConfig.devtool = false;
       webpackConfig.performance = { hints: false };

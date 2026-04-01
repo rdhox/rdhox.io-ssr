@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
 import Picto, { type PictoName } from './Picto';
 
 interface IconProps {
@@ -15,8 +14,14 @@ const Icon = ({
   title = '',
   background = true,
 }: IconProps) => {
+  const boxClass = background
+    ? 'bg-[#EEEEEE] hover:bg-[#EDE7F6]'
+    : 'bg-transparent hover:bg-transparent';
+
   return (
-    <Container background={background}>
+    <div
+      className={`flex h-16 w-16 cursor-pointer items-center justify-center rounded-[10px] m-0 max-[750px]:m-[5px] max-[750px]:h-10 max-[750px]:w-10 ${boxClass}`}
+    >
       {url !== '' ? (
         <a href={url} title={title}>
           <Picto icon={name} />
@@ -24,36 +29,8 @@ const Icon = ({
       ) : (
         <Picto icon={name} />
       )}
-    </Container>
+    </div>
   );
 };
-
-const Container = styled.div<{ background: boolean }>`
-  width: 64px;
-  height: 64px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: ${({ background }) =>
-    background ? '#EEEEEE' : 'transparent'};
-  border-radius: 10px;
-  cursor: pointer;
-  margin: 0px;
-
-  &:hover {
-    background-color: ${({ background }) =>
-      background ? '#EDE7F6' : 'transparent'};
-  }
-
-  img {
-    border-radius: 5px;
-  }
-
-  @media (max-width: 750px) {
-    width: 40px;
-    height: 40px;
-    margin: 5px;
-  }
-`;
 
 export default Icon;

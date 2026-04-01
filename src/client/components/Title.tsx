@@ -1,10 +1,8 @@
 import React from 'react';
-import styled, { keyframes } from 'styled-components';
 import { animated } from '@react-spring/web';
 import { useToggleScroll } from '../customHooks';
 import TextTitle from './TextTitle';
 import SubTextTitle from './SubTextTitle';
-import timing from '../config/timing';
 
 interface TitleProps {
   handleToggleContact: React.Dispatch<React.SetStateAction<boolean>>;
@@ -18,11 +16,14 @@ const Title = ({ handleToggleContact }: TitleProps) => {
   const [toggleAnim, lang] = useToggleScroll();
   const styleSub = { alignSelf: 'flex-start' as const };
   return (
-    <Container onClick={handleToggle}>
+    <div
+      className="relative mb-[30px] w-[480px] cursor-pointer opacity-0 [perspective:350px] animate-title-slide max-[750px]:w-[230px]"
+      onClick={handleToggle}
+    >
       <animated.div style={toggleAnim}>
-        <Wrapper>
+        <div className="flex flex-col items-end justify-center">
           <TextTitle lang={lang} bold spacing={1} children="blaz" />
-          <SubAnim>
+          <div className="relative animate-subtitle-slide opacity-0">
             <SubTextTitle
               style={styleSub}
               lang={lang}
@@ -31,76 +32,11 @@ const Title = ({ handleToggleContact }: TitleProps) => {
               color="grey"
               children="name"
             />
-          </SubAnim>
-        </Wrapper>
+          </div>
+        </div>
       </animated.div>
-    </Container>
+    </div>
   );
 };
-
-const animation = keyframes`
-  0% {
-    opacity: 0;
-    left: -300%;
-  }
-  60% {
-    opacity: 1;
-    left: -5%;
-  }
-  100% {
-    opacity: 1;
-    left: 0%;
-  }
-`;
-
-const Container = styled.div`
-  position: relative;
-  width: 480px;
-  opacity: 0;
-  margin-bottom: 30px;
-  animation-name: ${animation};
-  animation-duration: ${timing.durationTitle};
-  animation-delay: ${timing.delayTitle};
-  animation-timing-function: ease-out;
-  animation-fill-mode: forwards;
-  perspective: 350px;
-  cursor: pointer;
-
-  @media (max-width: 750px) {
-    width: 230px;
-  }
-`;
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-end;
-`;
-
-const subAnim = keyframes`
-  0% {
-    opacity: 0;
-    left: -200%;
-  }
-  80% {
-    opacity: 1;
-    left: 5%;
-  }
-  100% {
-    opacity: 1;
-    left: 0%;
-  }
-`;
-
-const SubAnim = styled.div`
-  position: relative;
-  opacity: 0;
-  animation-name: ${subAnim};
-  animation-duration: ${timing.durationSubTitle};
-  animation-delay: ${timing.delaySubTitle};
-  animation-timing-function: ease-out;
-  animation-fill-mode: forwards;
-`;
 
 export default Title;

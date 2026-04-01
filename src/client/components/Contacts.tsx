@@ -1,28 +1,37 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { useTrail, animated } from '@react-spring/web';
+import { useSprings, animated } from '@react-spring/web';
 import Icon from './Icon';
 import icons from '../config/iconContacts';
+import { opacityFromSpringX } from '../utils/iconSpringOpacity';
 
 interface ContactsProps {
   toggle: boolean;
 }
 
+const CLOSE_UNMOUNT_MS = 950;
+const STAGGER_MS = 48;
+const OPEN_LEAD_MS = 210;
+const ICON_CELL_PX = 72;
+const STACK_ENTRY_PX = 150;
+
+/** Empilées sur la colonne du dernier logo (entrée par la droite), même idée qu’Exps. */
+function stackedRightX(n: number, i: number): number {
+  return STACK_ENTRY_PX + (n - 1 - i) * ICON_CELL_PX;
+}
+
 const Contacts = ({ toggle }: ContactsProps) => {
-  const contactsAnim = useTrail(icons.length, {
-    from: {
-      opacity: 0,
-      transform: 'translateX(150px)',
-      display: 'none' as const,
-    },
-    to: {
-      opacity: toggle ? 1 : 0,
-      transform: toggle ? 'translateX(0px)' : 'translateX(150px)',
-      display: 'block' as const,
-    },
-    config: { mass: 0.4, tension: 500, friction: 20 },
-    delay: 200,
-  });
+  const n = icons.length;
+  const [contactsSprings] = useSprings(
+    n,
+    (i) => ({
+      from: { x: stackedRightX(n, i) },
+      to: { x: toggle ? 0 : stackedRightX(n, i) },
+      config: { tension: 305, friction: 19, mass: 0.58 },
+      delay:
+        (toggle ? i : n - 1 - i) * STAGGER_MS + (toggle ? OPEN_LEAD_MS : 0),
+    }),
+    [toggle]
+  );
 
   const [display, setDisplay] = useState(false);
 
@@ -31,17 +40,28 @@ const Contacts = ({ toggle }: ContactsProps) => {
       setDisplay(true);
     }
     if (!toggle && display) {
-      setTimeout(() => {
+      const t = setTimeout(() => {
         setDisplay(false);
-      }, 500);
+      }, CLOSE_UNMOUNT_MS);
+      return () => clearTimeout(t);
     }
-  }, [toggle]);
+  }, [toggle, display]);
 
   return (
-    <Container>
+    <div className="relative -right-[110px] top-0 flex h-[100px] w-[230px] items-center justify-between overflow-x-hidden p-[5px] max-[750px]:-right-10 max-[750px]:top-[-15px] max-[750px]:h-[50px] max-[750px]:w-[150px]">
       {display &&
-        contactsAnim.map((styles, index) => (
-          <animated.div key={index} style={styles}>
+        contactsSprings.map((styles, index) => (
+          <animated.div
+            key={index}
+            style={{
+              transform: styles.x.to((x: number) => `translateX(${x}px)`),
+              opacity: styles.x.to((x: number) =>
+                opacityFromSpringX(x, stackedRightX(n, index), toggle)
+              ),
+              willChange: 'transform, opacity',
+              zIndex: n - index,
+            }}
+          >
             <Icon
               name={icons[index].name}
               title={icons[index].title}
@@ -49,27 +69,8 @@ const Contacts = ({ toggle }: ContactsProps) => {
             />
           </animated.div>
         ))}
-    </Container>
+    </div>
   );
 };
-
-const Container = styled.div`
-  position: relative;
-  top: 0;
-  right: -110px;
-  width: 230px;
-  height: 100px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 5px;
-
-  @media (max-width: 750px) {
-    top: -15px;
-    right: -40px;
-    width: 150px;
-    height: 50px;
-  }
-`;
 
 export default Contacts;

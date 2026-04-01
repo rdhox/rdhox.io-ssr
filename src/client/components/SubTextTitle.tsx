@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
 import lg, { LangStringKey } from '../config/lang';
 import type { Lang } from '../customHooks/toggleScroll';
 
@@ -19,37 +18,24 @@ const SubTextTitle = ({
   italic = false,
   bold = false,
   spacing = 'normal',
+  className,
   ...rest
 }: SubTextTitleProps) => {
   return (
-    <Container
-      color={color}
-      italic={italic}
-      bold={bold}
-      spacing={spacing}
+    <span
+      className={`text-2xl max-[750px]:text-lg ${className ?? ''}`}
+      style={{
+        color,
+        fontWeight: bold ? 'bold' : 'normal',
+        fontStyle: italic ? 'italic' : 'normal',
+        letterSpacing:
+          typeof spacing === 'number' ? `${spacing}px` : spacing,
+      }}
       {...rest}
     >
       {lg[lang][children]}
-    </Container>
+    </span>
   );
 };
-
-const Container = styled.span<{
-  color?: string;
-  italic?: boolean;
-  bold?: boolean;
-  spacing?: number | string;
-}>`
-  font-size: 24px;
-  color: ${({ color }) => color};
-  font-weight: ${({ bold }) => (bold ? 'bold' : 'normal')};
-  font-style: ${({ italic }) => (italic ? 'italic' : 'normal')};
-  letter-spacing: ${({ spacing }) =>
-    typeof spacing === 'number' ? `${spacing}px` : spacing};
-
-  @media (max-width: 750px) {
-    font-size: 18px;
-  }
-`;
 
 export default SubTextTitle;

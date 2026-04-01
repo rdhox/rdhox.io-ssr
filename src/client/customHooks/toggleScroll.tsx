@@ -1,22 +1,37 @@
-import React, { useState, useEffect, useContext, useMemo } from 'react';
-import { useSpring, config } from '@react-spring/web';
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useMemo,
+  useRef,
+  useCallback,
+} from 'react';
+import { useSpring, type SpringValue } from '@react-spring/web';
 import { useGesture } from '@use-gesture/react';
-import { detect } from 'detect-browser';
-
-const browser = detect();
+import { useMediaQuery } from 'react-responsive';
 
 export type Lang = 'fr' | 'en';
 
 export interface LangContextValue {
-  flick: boolean;
-  setFlick: React.Dispatch<React.SetStateAction<boolean>>;
-  flickValue: number;
-  toggle: boolean;
-  setToggle: React.Dispatch<React.SetStateAction<boolean>>;
   lang: Lang;
+  flipDeg: SpringValue<number>;
+  /** +1 (scroll down / swipe down) or -1 (scroll up / swipe up). */
+  flipDir: SpringValue<number>;
 }
 
 export const LangCtxt = React.createContext<LangContextValue | null>(null);
+
+const WHEEL_FLIP_ACCUM = 72;
+const DRAG_TOGGLE_DESKTOP = 250;
+const DRAG_TOGGLE_MOBILE = 120;
+const AXIS_RATIO = 1.15;
+
+/**
+ * Single rotation 0 → 180°.
+ * Language changes at exactly 90° (text is edge-on, invisible).
+ * The spring overshoots a bit past 180 then settles — natural deceleration.
+ */
+const spinConfig = { tension: 280, friction: 18 };
 
 export function useCreateToggleScroll(
   setToggleContact: React.Dispatch<React.SetStateAction<boolean>>,
@@ -24,108 +39,152 @@ export function useCreateToggleScroll(
   setToggleExps: React.Dispatch<React.SetStateAction<boolean>>,
   toggleExps: boolean
 ) {
-  function handleMenu(limit: number, deltaX: number, direction: number) {
-    if (Math.abs(deltaX) > limit) {
-      if (direction < 0) {
-        if (!toggleContact && !toggleExps) {
-          setToggleContact(true);
-        } else if (!toggleContact && toggleExps) {
-          setToggleExps(false);
-        }
-      } else if (direction > 0) {
-        if (!toggleContact && !toggleExps) {
-          setToggleExps(true);
-        } else if (toggleContact && !toggleExps) {
-          setToggleContact(false);
-        }
-      }
-    }
-  }
+  const isNarrow = useMediaQuery({ maxWidth: 750 });
+  const dragToggleAt = isNarrow ? DRAG_TOGGLE_MOBILE : DRAG_TOGGLE_DESKTOP;
 
-  function handleToggle(limit: number, deltaY: number, coef: number) {
-    if (Math.abs(deltaY) < limit) {
-      setFlickValue(Math.abs(deltaY) * coef);
-      setFlick(true);
-    } else {
-      if (!toggle) {
-        setFlick(false);
-        setToggle(t => !t);
-      }
-    }
-  }
-
-  const handleGestureWheel = (e: {
-    delta: [number, number];
-    axis: 'x' | 'y' | undefined;
-  }) => {
-    const { delta, axis } = e;
-    if (axis === 'y') {
-      switch (browser && browser.name) {
-        case 'firefox':
-          handleToggle(18, delta[1], 5);
-          break;
-        case 'chrome':
-          handleToggle(18, delta[1], 5);
-          break;
-        case 'safari':
-          handleToggle(18, delta[1], 5);
-          break;
-        case 'ios':
-          handleToggle(18, delta[1], 5);
-          break;
-        default:
-          console.error(
-            'No browser detected, some strange behaviors may happen'
-          );
-          handleToggle(18, delta[1], 5);
-      }
-    }
-  };
-
-  const handleGestureDrag = (e: {
-    event?: UIEvent;
-    axis: 'x' | 'y' | undefined;
-    direction: [number, number];
-    distance: [number, number];
-  }) => {
-    if (e.event) {
-      e.event.preventDefault();
-    }
-    const { axis, direction, distance } = e;
-    if (axis === 'y') {
-      handleToggle(250, Math.abs(distance[1]), 0.5);
-    }
-    if (axis === 'x') {
-      handleMenu(140, Math.abs(distance[0]), direction[0]);
-    }
-  };
-
-  const bindGesture = useGesture({
-    onDrag: state => handleGestureDrag(state),
-    onWheel: state => handleGestureWheel(state),
-  });
-
-  const [flick, setFlick] = useState(false);
-  const [flickValue, setFlickValue] = useState(0);
-  const [toggle, setToggle] = useState(false);
   const [lang, setLang] = useState<Lang>('fr');
+  const animatingRef = useRef(false);
+  const langChangedRef = useRef(false);
+
+  const wheelAcc = useRef(0);
+  const wheelIdleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const [flipSpring, flipApi] = useSpring(() => ({ deg: 0, dir: 1 }));
+
+  const triggerFlip = useCallback(
+    (gestureDir: number) => {
+      if (animatingRef.current) return;
+      animatingRef.current = true;
+      langChangedRef.current = false;
+
+      wheelAcc.current = 0;
+      if (wheelIdleTimer.current) {
+        clearTimeout(wheelIdleTimer.current);
+        wheelIdleTimer.current = null;
+      }
+
+      const sign = gestureDir >= 0 ? 1 : -1;
+
+      flipApi.stop();
+      flipApi.set({ dir: sign });
+      flipApi.start({
+        from: { deg: 0 },
+        to: { deg: 360, config: spinConfig },
+        onChange: (result) => {
+          if (langChangedRef.current) return;
+          const d = (result.value as { deg: number }).deg;
+          if (d >= 90) {
+            langChangedRef.current = true;
+            setLang(l => (l === 'fr' ? 'en' : 'fr'));
+          }
+        },
+        onRest: () => {
+          flipApi.set({ deg: 0 });
+          animatingRef.current = false;
+        },
+      });
+    },
+    [flipApi]
+  );
+
+  // --- Horizontal swipe: open/close Contacts or Exps panels ---
+
+  const handleMenu = useCallback(
+    (limit: number, deltaX: number, direction: number) => {
+      if (Math.abs(deltaX) <= limit) return;
+      if (direction < 0) {
+        if (!toggleContact && !toggleExps) setToggleContact(true);
+        else if (!toggleContact && toggleExps) setToggleExps(false);
+      } else if (direction > 0) {
+        if (!toggleContact && !toggleExps) setToggleExps(true);
+        else if (toggleContact && !toggleExps) setToggleContact(false);
+      }
+    },
+    [setToggleContact, setToggleExps, toggleContact, toggleExps]
+  );
+
+  // --- Wheel ---
+
+  const handleWheel = useCallback(
+    (e: { delta: [number, number]; axis: 'x' | 'y' | undefined }) => {
+      if (animatingRef.current) return;
+      if (e.axis === 'x') return;
+
+      wheelAcc.current += e.delta[1];
+
+      if (Math.abs(wheelAcc.current) >= WHEEL_FLIP_ACCUM) {
+        const sign = wheelAcc.current > 0 ? 1 : -1;
+        triggerFlip(sign);
+        return;
+      }
+
+      if (wheelIdleTimer.current) clearTimeout(wheelIdleTimer.current);
+      wheelIdleTimer.current = setTimeout(() => {
+        wheelAcc.current = 0;
+        wheelIdleTimer.current = null;
+      }, 280);
+    },
+    [triggerFlip]
+  );
+
+  // --- Drag / swipe ---
+
+  const handleDrag = useCallback(
+    (e: {
+      event?: UIEvent;
+      movement: [number, number];
+      direction: [number, number];
+      last: boolean;
+    }) => {
+      if (animatingRef.current) return;
+      if (e.event && 'preventDefault' in e.event) e.event.preventDefault();
+
+      const { movement, direction, last } = e;
+      if (!last) return;
+
+      const absX = Math.abs(movement[0]);
+      const absY = Math.abs(movement[1]);
+
+      if (absY > absX * AXIS_RATIO) {
+        if (absY >= dragToggleAt) {
+          triggerFlip(movement[1] > 0 ? 1 : -1);
+        }
+        return;
+      }
+
+      if (absX > absY * AXIS_RATIO) {
+        handleMenu(140, absX, direction[0]);
+      }
+    },
+    [handleMenu, dragToggleAt, triggerFlip]
+  );
+
+  // --- Cleanup ---
 
   useEffect(() => {
-    if (toggle) {
-      setLang(l => (l === 'fr' ? 'en' : 'fr'));
+    return () => {
+      if (wheelIdleTimer.current) clearTimeout(wheelIdleTimer.current);
+    };
+  }, []);
+
+  // --- Gesture binding ---
+
+  const bindGesture = useGesture(
+    {
+      onDrag: state => handleDrag(state),
+      onWheel: state => handleWheel(state),
+    },
+    {
+      drag: { filterTaps: true, threshold: 18, rubberband: false },
+      wheel: { eventOptions: { passive: false } },
     }
-  }, [toggle]);
+  );
+
+  // --- Context value ---
 
   const valuesLangCtxt = useMemo(
-    () => ({
-      flick,
-      setFlick,
-      flickValue,
-      toggle,
-      setToggle,
-      lang,
-    }),
-    [flick, toggle, flickValue, lang]
+    () => ({ lang, flipDeg: flipSpring.deg, flipDir: flipSpring.dir }),
+    [lang, flipSpring.deg, flipSpring.dir]
   );
 
   return {
@@ -135,47 +194,24 @@ export function useCreateToggleScroll(
   };
 }
 
+// ---------------------------------------------------------------------------
+
 export function useToggleScroll(dir: number = 1) {
   const ctx = useContext(LangCtxt);
   if (!ctx) {
     throw new Error('useToggleScroll must be used within LangCtxt provider');
   }
-  const { flick, setFlick, flickValue, toggle, setToggle, lang } = ctx;
+  const { lang, flipDeg, flipDir } = ctx;
 
-  const [toggleAnimation] = useSpring(
-    {
-      from: { transform: 'rotateX(0deg)' },
-      to: async (start, stop) => {
-        if (toggle) {
-          stop();
-          await start({
-            transform: `rotateX(${dir * (lang === 'fr' ? 0 : 720)}deg)`,
-            config: config.stiff,
-          });
-        }
-        if (flick) {
-          await start({
-            transform: `rotateX(${dir * (lang === 'fr' ? flickValue : 720 + flickValue)}deg)`,
-            config: config.stiff,
-          });
-          await start({
-            transform: `rotateX(${dir * (lang === 'fr' ? 0 : 720)}deg)`,
-            config: config.stiff,
-          });
-        }
-      },
-      onRest: () => {
-        if (flick) {
-          setFlick(false);
-        }
-        if (toggle) {
-          setToggle(false);
-          setFlick(false);
-        }
-      },
-    },
-    [toggle, flick, flickValue, lang, dir]
+  const style = useMemo(
+    () => ({
+      transform: flipDeg.to((d: number) => {
+        const gestureSign = flipDir.get();
+        return `rotateX(${dir * gestureSign * d}deg)`;
+      }),
+    }),
+    [flipDeg, flipDir, dir]
   );
 
-  return [toggleAnimation, lang] as const;
+  return [style, lang] as const;
 }
