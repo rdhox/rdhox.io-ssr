@@ -10,10 +10,18 @@ let currentApp = app;
 
 const port = Number(process.env.PORT) || 3000;
 
-/** HMR in dev, or when this bundle is the process entry (`node build/server.js` / Coolify). */
+/**
+ * HMR in dev, or when this bundle is the process entry.
+ * In the production Webpack bundle, `require.main === module` is false for the inner module, so
+ * `node build/server.js` would never call listen() — Docker/Coolify then get 503 (no listening port).
+ */
+const ranAsCompiledServer =
+  typeof process !== 'undefined' && /server\.js$/.test(process.argv[1] ?? '');
+
 const shouldListen =
   Boolean(module.hot) ||
-  (typeof require !== 'undefined' && require.main === module);
+  (typeof require !== 'undefined' && require.main === module) ||
+  ranAsCompiledServer;
 
 if (shouldListen) {
   // Bind 0.0.0.0 so Docker/Coolify can reach the process (not only localhost).
